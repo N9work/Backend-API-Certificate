@@ -1,0 +1,82 @@
+diff --git a/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/t.js b/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/t.js
+index 1cea1fd..5e02903 100644
+--- a/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/t.js
++++ b/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/t.js
+@@ -1,4 +1,5 @@
+ import { join } from 'path';
++import { pathToFileURL } from 'url';
+ import { getConfig, getState } from './env.js';
+ import { ROOT } from './env.js';
+ 
+@@ -12,7 +13,7 @@ export async function t(key, args = {}, forceLangToUse) {
+   if (!assertions) {
+     return key;
+   }
+-  const comments = await import(join(ROOT, assertions), {
++  const comments = await import(pathToFileURL(join(ROOT, assertions)).href, {
+     assert: { type: 'json' }
+   });
+ 
+diff --git a/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/test-utils.js b/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/test-utils.js
+index 146602d..28dc443 100644
+--- a/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/test-utils.js
++++ b/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/test-utils.js
+@@ -2,6 +2,7 @@ import { readFile } from 'fs/promises';
+ import { exec } from 'child_process';
+ import { promisify } from 'util';
+ import { join } from 'path';
++import { pathToFileURL } from 'url';
+ import { ROOT } from './env.js';
+ import { logover } from './logger.js';
+ 
+@@ -140,7 +141,7 @@ async function getTerminalOutput() {
+  * @returns {Promise<ReturnType<typeof import>>}
+  */
+ async function importSansCache(path) {
+-  const cacheBustingModulePath = `${join(ROOT, path)}?update=${Date.now()}`;
++  const cacheBustingModulePath = `${pathToFileURL(join(ROOT, path)).href}?update=${Date.now()}`;
+   return await import(cacheBustingModulePath);
+ }
+ 
+diff --git a/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/tests/main.js b/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/tests/main.js
+index db7c135..a8f5586 100644
+--- a/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/tests/main.js
++++ b/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/tests/main.js
+@@ -14,6 +14,7 @@ import {
+ } from '../client-socks.js';
+ import { runLesson } from '../lesson.js';
+ import { join } from 'node:path';
++import { pathToFileURL } from 'node:url';
+ import { Worker } from 'node:worker_threads';
+ import { pluginEvents } from '../../plugin/index.js';
+ import { t } from '../t.js';
+@@ -21,7 +22,7 @@ import { t } from '../t.js';
+ try {
+   const plugins = freeCodeCampConfig.tooling?.plugins;
+   if (plugins) {
+-    await import(join(ROOT, plugins));
++    await import(pathToFileURL(join(ROOT, plugins)).href);
+   }
+ } catch (e) {
+   logover.error('Error importing plugins:');
+diff --git a/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/tests/test-worker.js b/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/tests/test-worker.js
+index 8fbf141..e9afba9 100644
+--- a/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/tests/test-worker.js
++++ b/node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/tests/test-worker.js
+@@ -5,6 +5,7 @@ import __helpers_c from '../test-utils.js';
+ 
+ import { freeCodeCampConfig, ROOT } from '../env.js';
+ import { join } from 'path';
++import { pathToFileURL } from 'url';
+ import { logover } from '../logger.js';
+ 
+ let __helpers = __helpers_c;
+@@ -12,7 +13,7 @@ let __helpers = __helpers_c;
+ // Update __helpers with dynamic utils:
+ const helpers = freeCodeCampConfig.tooling?.['helpers'];
+ if (helpers) {
+-  const dynamicHelpers = await import(join(ROOT, helpers));
++  const dynamicHelpers = await import(pathToFileURL(join(ROOT, helpers)).href);
+   __helpers = { ...__helpers_c, ...dynamicHelpers };
+ }
+ 

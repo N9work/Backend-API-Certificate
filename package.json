@@ -1,19 +1,29 @@
 {
-  "name": "movie-api",
-  "version": "1.0.0",
-  "description": "Family movie watchlist API",
-  "main": "index.js",
-  "scripts": {
-    "start": "node --env-file .env index.js"
-  },
-  "keywords": [],
   "author": "",
-  "license": "BSD-3-Clause",
-  "type": "module",
   "dependencies": {
-    "bcryptjs": "3.0.3",
-    "jsonwebtoken": "9.0.3",
-    "express": "5.2.1",
-    "helmet": "8.2.0"
+    "@babel/generator": "7.29.7",
+    "@babel/parser": "7.29.7",
+    "@freecodecamp/freecodecamp-os": "3.5.4",
+    "babeliser": "0.6.0",
+    "express": "^5.2.1"
+  },
+  "description": "",
+  "keywords": [],
+  "license": "BSD-3-Clause",
+  "name": "back-end-development-and-apis",
+  "private": true,
+  "scripts": {
+    "postinstall": "patch-package",
+    "start": "node ./node_modules/@freecodecamp/freecodecamp-os/.freeCodeCamp/tooling/server.js",
+    "curriculum:extract": "node test/extract.mjs",
+    "test": "node --test test/plugins.test.mjs && node test/run.mjs",
+    "test:lint": "node test/run.mjs --check lint",
+    "test:plugins": "node --test test/plugins.test.mjs",
+    "test:crash": "node test/run.mjs --check crash"
+  },
+  "type": "module",
+  "version": "1.1.16",
+  "devDependencies": {
+    "patch-package": "^8.0.1"
   }
 }
